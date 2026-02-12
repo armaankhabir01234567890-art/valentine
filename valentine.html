@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine?</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 25px 45px rgba(0,0,0,0.25);
+  max-width: 360px;
+  width: 90%;
+  position: relative;
+  z-index: 10;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+#text {
+  font-size: 16px;
+  color: #555;
+  min-height: 60px;
+}
+
+.cat {
+  margin: 15px 0;
+}
+
+.cat img {
+  width: 140px;
+}
+
+.buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#yesBtn {
+  background: #ff4d6d;
+  color: white;
+  font-size: 18px;
+}
+
+#noBtn {
+  background: #ddd;
+}
+
+#result {
+  display: none;
+  font-size: 20px;
+  color: #ff4d6d;
+  margin-top: 20px;
+}
+
+#from {
+  margin-top: 8px;
+  font-size: 16px;
+  color: #777;
+}
+
+#screenshot {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #999;
+}
+
+/* Hearts */
+.heart {
+  position: fixed;
+  bottom: -10px;
+  font-size: 20px;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-10px) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Samriddhi, will you be my Valentine? 💖</h1>
+  <p id="text">Think carefully before answering 😌</p>
+
+  <div class="cat">
+    <img id="catGif" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
+  </div>
+
+  <div class="buttons">
+    <button id="yesBtn" onclick="yesClicked()">Yes 💕</button>
+    <button id="noBtn" onclick="noClicked()">No 🙃</button>
+  </div>
+
+  <div id="result">
+    YAYYY 💘💘💘<br>
+    Best decision of your life 🥰
+    <div id="from">— from Armaan 💌</div>
+    <div id="screenshot">Screenshot this & send it to me 📸💖</div>
+  </div>
+</div>
+
+<script>
+let yesScale = 1;
+
+/* Text messages */
+const messages = [
+  "Are you sure? 🤨",
+  "Samriddhi behave 😤",
+  "You won’t get a date better than me in whole of KIIT 😌",
+  "Are you REALLY sure??",
+  "The Yes button is looking tempting 👀",
+  "You told me you like ghumna—say yes and leave the rest to me 🌍✨",
+  "Come on, I already have my whole Valentine’s Day planned with you 💌",
+  "Don’t you wanna see me a superhero? 🦸‍♂️❤️",
+  "The cat is judging you now 🐱",
+  "Okay this is getting personal 😾"
+];
+
+/* Cat reactions for NO */
+const noCats = [
+  "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",      // sad cat
+  "https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",     // annoyed
+  "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",     // judging
+  "https://media.giphy.com/media/13borq7Zo2kulO/giphy.gif",    // begging
+  "https://media.giphy.com/media/VbnUQpnihPSIgIXuZv/giphy.gif" // angry cute
+];
+
+/* Cat reactions for YES */
+const yesCats = [
+  "https://media.giphy.com/media/5i7umUqAOYYEw/giphy.gif",
+  "https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif",
+  "https://media.giphy.com/media/l4pTfx2qLszoacZRS/giphy.gif"
+];
+
+let msgIndex = 0;
+let catIndex = 0;
+
+function noClicked() {
+  yesScale += 0.25;
+  document.getElementById("yesBtn").style.transform = `scale(${yesScale})`;
+
+  document.getElementById("text").innerText = messages[msgIndex];
+  msgIndex = (msgIndex + 1) % messages.length;
+
+  document.getElementById("catGif").src = noCats[catIndex];
+  catIndex = (catIndex + 1) % noCats.length;
+}
+
+function yesClicked() {
+  document.querySelector(".buttons").style.display = "none";
+  document.getElementById("text").style.display = "none";
+  document.getElementById("result").style.display = "block";
+
+  document.getElementById("catGif").src =
+    yesCats[Math.floor(Math.random() * yesCats.length)];
+
+  startConfetti();
+  startHearts();
+}
+
+/* Confetti */
+function startConfetti() {
+  for (let i = 0; i < 120; i++) {
+    const confetti = document.createElement("div");
+    confetti.className = "confetti";
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.background = `hsl(${Math.random()*360}, 100%, 60%)`;
+    confetti.style.animationDuration = (Math.random()*2 + 2) + "s";
+    document.body.appendChild(confetti);
+  }
+}
+
+/* Hearts */
+function startHearts() {
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random()*20 + 15) + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }, 300);
+}
+</script>
+
+</body>
+</html>
